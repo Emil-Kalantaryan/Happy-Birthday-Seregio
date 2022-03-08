@@ -1,2 +1,2 @@
-# Happy-Birthday-Seregio
+# Happy Birthday Seregio
 Happy Birthday Seregio
