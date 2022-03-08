@@ -1,0 +1,2752 @@
+<!-- Author: Emilchi - https://github.com/Emil-Kalantaryan -->
+<!-- Special thanks to: Morgenstern2573 - https://github.com/Morgenstern2573 -->
+<!doctype html>
+<html lang="es">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+
+    <!-- ToastrJS CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.css" rel="stylesheet" />
+
+    <!-- Animate CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+
+    <title>Feliz Cumpleaños - Seregio</title>
+</head>
+
+<body>
+    <!-- Local CSS -->
+    <style>
+        h1 {
+            text-align: center;
+        }
+
+        #game-board {
+            display: flex;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        #keyboard-cont {
+            margin: 1rem 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transition: all 0.5s;
+        }
+
+        #keyboard-cont div {
+            display: flex;
+        }
+
+        .letter-box {
+            border: 1px solid #c4c4c4;
+            border-radius: 3px;
+            margin: 3px;
+            font-size: 2rem;
+            font-weight: 700;
+            height: 4rem;
+            width: 4rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-transform: uppercase;
+        }
+
+        .filled-box {
+            border: 2px solid #595959;
+        }
+
+        .letter-row {
+            display: flex;
+        }
+
+        .second-row {
+            margin: 0.5rem 0;
+        }
+
+        .keyboard-button {
+            font-size: 1rem;
+            font-weight: 700;
+            padding: 1rem;
+            margin: 0 2px;
+            cursor: pointer;
+            text-transform: uppercase;
+            border: none;
+        }
+
+        .center {
+            margin-top: 40vh;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+        }
+
+        .button {
+            border-radius: 50px;
+            background-color: black;
+            border: none;
+            color: #FFFFFF;
+            text-align: center;
+            font-size: 36px;
+            padding: 10px;
+            width: 200px;
+            transition: all 0.5s;
+            cursor: pointer;
+            margin: 5px;
+        }
+
+        .button span {
+            cursor: pointer;
+            display: inline-block;
+            position: relative;
+            transition: 0.5s;
+        }
+
+        .button span:after {
+            content: '\00bb';
+            position: absolute;
+            opacity: 0;
+            top: 0;
+            right: -20px;
+            transition: 0.5s;
+        }
+
+        .button:hover span {
+            padding-right: 25px;
+        }
+
+        .button:hover span:after {
+            opacity: 1;
+            right: 0;
+        }
+
+        .slide-element {
+            transition: all 0.5s;
+        }
+
+        #day {
+            font-weight: bold;
+        }
+
+        /* Ballons */
+        .container {
+            width: 800px;
+            height: 250px;
+            padding: 10px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .balloon {
+            width: 738px;
+            margin: 0 auto;
+            padding-top: 30px;
+            position: relative;
+        }
+
+        .balloon>div {
+            width: 104px;
+            height: 140px;
+            background: rgba(182, 15, 97, 0.9);
+            border-radius: 0;
+            border-radius: 80% 80% 80% 80%;
+            margin: 0 auto;
+            position: absolute;
+            padding: 10px;
+            box-shadow: inset 17px 7px 10px rgba(182, 15, 97, 0.9);
+            transform-origin: bottom center;
+        }
+
+        .balloon>div:nth-child(1) {
+            background: rgba(182, 15, 97, 0.9);
+            left: 0;
+            box-shadow: inset 10px 10px 10px rgba(135, 11, 72, 0.9);
+            -webkit-animation: balloon1 6s ease-in-out infinite;
+            -moz-animation: balloon1 6s ease-in-out infinite;
+            -o-animation: balloon1 6s ease-in-out infinite;
+            animation: balloon1 6s ease-in-out infinite;
+        }
+
+        .balloon>div:nth-child(1):before {
+            color: rgba(182, 15, 97, 0.9);
+        }
+
+        .balloon>div:nth-child(2) {
+            background: rgba(242, 112, 45, 0.9);
+            left: 120px;
+            box-shadow: inset 10px 10px 10px rgba(222, 85, 14, 0.9);
+            -webkit-animation: balloon2 6s ease-in-out infinite;
+            -moz-animation: balloon2 6s ease-in-out infinite;
+            -o-animation: balloon2 6s ease-in-out infinite;
+            animation: balloon2 6s ease-in-out infinite;
+        }
+
+        .balloon>div:nth-child(2):before {
+            color: rgba(242, 112, 45, 0.9);
+        }
+
+        .balloon>div:nth-child(3) {
+            background: rgba(45, 181, 167, 0.9);
+            left: 240px;
+            box-shadow: inset 10px 10px 10px rgba(35, 140, 129, 0.9);
+            -webkit-animation: balloon4 6s ease-in-out infinite;
+            -moz-animation: balloon4 6s ease-in-out infinite;
+            -o-animation: balloon4 6s ease-in-out infinite;
+            animation: balloon4 6s ease-in-out infinite;
+        }
+
+        .balloon>div:nth-child(3):before {
+            color: rgba(45, 181, 167, 0.9);
+        }
+
+        .balloon>div:nth-child(4) {
+            background: rgba(190, 61, 244, 0.9);
+            left: 360px;
+            box-shadow: inset 10px 10px 10px rgba(173, 14, 240, 0.9);
+            -webkit-animation: balloon1 5s ease-in-out infinite;
+            -moz-animation: balloon1 5s ease-in-out infinite;
+            -o-animation: balloon1 5s ease-in-out infinite;
+            animation: balloon1 5s ease-in-out infinite;
+        }
+
+        .balloon>div:nth-child(4):before {
+            color: rgba(190, 61, 244, 0.9);
+        }
+
+        .balloon>div:nth-child(5) {
+            background: rgba(180, 224, 67, 0.9);
+            left: 480px;
+            box-shadow: inset 10px 10px 10px rgba(158, 206, 34, 0.9);
+            -webkit-animation: balloon3 5s ease-in-out infinite;
+            -moz-animation: balloon3 5s ease-in-out infinite;
+            -o-animation: balloon3 5s ease-in-out infinite;
+            animation: balloon3 5s ease-in-out infinite;
+        }
+
+        .balloon>div:nth-child(5):before {
+            color: rgba(180, 224, 67, 0.9);
+        }
+
+        .balloon>div:nth-child(6) {
+            background: rgba(242, 194, 58, 0.9);
+            left: 600px;
+            box-shadow: inset 10px 10px 10px rgba(234, 177, 15, 0.9);
+            -webkit-animation: balloon2 3s ease-in-out infinite;
+            -moz-animation: balloon2 3s ease-in-out infinite;
+            -o-animation: balloon2 3s ease-in-out infinite;
+            animation: balloon2 3s ease-in-out infinite;
+        }
+
+        .balloon>div:nth-child(6):before {
+            color: rgba(242, 194, 58, 0.9);
+        }
+
+        .balloon>div:before {
+            color: rgba(182, 15, 97, 0.9);
+            position: absolute;
+            bottom: -11px;
+            left: 52px;
+            content: "▲";
+            font-size: 1em;
+        }
+
+        .span {
+            font-size: 4.8em;
+            color: white;
+            position: relative;
+            top: 0px;
+            left: 16%;
+            margin-left: -27px;
+        }
+
+        /*BALLOON 1 4*/
+        @-webkit-keyframes balloon1 {
+
+            0%,
+            100% {
+                -webkit-transform: translateY(0) rotate(-6deg);
+            }
+
+            50% {
+                -webkit-transform: translateY(-20px) rotate(8deg);
+            }
+        }
+
+        @-moz-keyframes balloon1 {
+
+            0%,
+            100% {
+                -moz-transform: translateY(0) rotate(-6deg);
+            }
+
+            50% {
+                -moz-transform: translateY(-20px) rotate(8deg);
+            }
+        }
+
+        @-o-keyframes balloon1 {
+
+            0%,
+            100% {
+                -o-transform: translateY(0) rotate(-6deg);
+            }
+
+            50% {
+                -o-transform: translateY(-20px) rotate(8deg);
+            }
+        }
+
+        @keyframes balloon1 {
+
+            0%,
+            100% {
+                transform: translateY(0) rotate(-6deg);
+            }
+
+            50% {
+                transform: translateY(-20px) rotate(8deg);
+            }
+        }
+
+        /* BAllOON 2 5*/
+        @-webkit-keyframes balloon2 {
+
+            0%,
+            100% {
+                -webkit-transform: translateY(0) rotate(6eg);
+            }
+
+            50% {
+                -webkit-transform: translateY(-30px) rotate(-8deg);
+            }
+        }
+
+        @-moz-keyframes balloon2 {
+
+            0%,
+            100% {
+                -moz-transform: translateY(0) rotate(6deg);
+            }
+
+            50% {
+                -moz-transform: translateY(-30px) rotate(-8deg);
+            }
+        }
+
+        @-o-keyframes balloon2 {
+
+            0%,
+            100% {
+                -o-transform: translateY(0) rotate(6deg);
+            }
+
+            50% {
+                -o-transform: translateY(-30px) rotate(-8deg);
+            }
+        }
+
+        @keyframes balloon2 {
+
+            0%,
+            100% {
+                transform: translateY(0) rotate(6deg);
+            }
+
+            50% {
+                transform: translateY(-30px) rotate(-8deg);
+            }
+        }
+
+        /* BAllOON 0*/
+        @-webkit-keyframes balloon3 {
+
+            0%,
+            100% {
+                -webkit-transform: translate(0, -10px) rotate(6eg);
+            }
+
+            50% {
+                -webkit-transform: translate(-20px, 30px) rotate(-8deg);
+            }
+        }
+
+        @-moz-keyframes balloon3 {
+
+            0%,
+            100% {
+                -moz-transform: translate(0, -10px) rotate(6eg);
+            }
+
+            50% {
+                -moz-transform: translate(-20px, 30px) rotate(-8deg);
+            }
+        }
+
+        @-o-keyframes balloon3 {
+
+            0%,
+            100% {
+                -o-transform: translate(0, -10px) rotate(6eg);
+            }
+
+            50% {
+                -o-transform: translate(-20px, 30px) rotate(-8deg);
+            }
+        }
+
+        @keyframes balloon3 {
+
+            0%,
+            100% {
+                transform: translate(0, -10px) rotate(6eg);
+            }
+
+            50% {
+                transform: translate(-20px, 30px) rotate(-8deg);
+            }
+        }
+
+        /* BAllOON 3*/
+        @-webkit-keyframes balloon4 {
+
+            0%,
+            100% {
+                -webkit-transform: translate(10px, -10px) rotate(-8eg);
+            }
+
+            50% {
+                -webkit-transform: translate(-15px, 20px) rotate(10deg);
+            }
+        }
+
+        @-moz-keyframes balloon4 {
+
+            0%,
+            100% {
+                -moz-transform: translate(10px, -10px) rotate(-8eg);
+            }
+
+            50% {
+                -moz-transform: translate(-15px, 10px) rotate(10deg);
+            }
+        }
+
+        @-o-keyframes balloon4 {
+
+            0%,
+            100% {
+                -o-transform: translate(10px, -10px) rotate(-8eg);
+            }
+
+            50% {
+                -o-transform: translate(-15px, 10px) rotate(10deg);
+            }
+        }
+
+        @keyframes balloon4 {
+
+            0%,
+            100% {
+                transform: translate(10px, -10px) rotate(-8eg);
+            }
+
+            50% {
+                transform: translate(-15px, 10px) rotate(10deg);
+            }
+        }
+
+        /* Gift Button */
+        .wrap {
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .button-gift {
+            min-width: 300px;
+            min-height: 60px;
+            font-family: 'Nunito', sans-serif;
+            font-size: 22px;
+            text-transform: uppercase;
+            letter-spacing: 1.3px;
+            font-weight: 700;
+            color: black;
+            background: black;
+            border: none;
+            border-radius: 1000px;
+            transition: all 0.3s ease-in-out 0s;
+            cursor: pointer;
+            outline: none;
+            position: relative;
+            padding: 10px;
+        }
+
+        .gift-button::before {
+            content: '';
+            border-radius: 1000px;
+            min-width: calc(300px + 12px);
+            min-height: calc(60px + 12px);
+            border: 6px solid #FF3636;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            opacity: 0;
+            transition: all .3s ease-in-out 0s;
+        }
+
+        .button-gift:hover,
+        .button-gift:focus {
+            color: white;
+            transform: translateY(-6px);
+        }
+
+        .gift-button:hover::before,
+        .gift-button:focus::before {
+            opacity: 1;
+        }
+
+        .gift-button::after {
+            content: '';
+            width: 30px;
+            height: 30px;
+            border-radius: 100%;
+            border: 6px solid #F84949;
+            position: absolute;
+            z-index: -1;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation: ring 1.5s infinite;
+        }
+
+        .gift-button:hover::after,
+        .gift-button:focus::after {
+            animation: none;
+            display: none;
+        }
+
+        @keyframes ring {
+            0% {
+                width: 30px;
+                height: 30px;
+                opacity: 1;
+            }
+
+            100% {
+                width: 300px;
+                height: 300px;
+                opacity: 0;
+            }
+        }
+    </style>
+
+    <div id="slide" class="center slide">
+        <div id="start">
+            <button onclick="javascript:slide1()" class="button"><span><b>START</b></span></button>
+        </div>
+
+        <div id="slide1" style="display: none;">
+            <h1 style="font-size: 60px;"><b>SEREGIO</b></h1>
+            <br>
+            <h2 id="slide1-text" class="slide-element" style="margin-bottom: 200px; opacity: 0;">¡Los panas queremos
+                desearte un feliz cumpleaños!</h2>
+            <button id="slide1-button" onclick="javascript:slide2()" class="button"
+                style="font-size: 22px; opacity: 0; display: none;"><span><b>Siguiente</b></span></button>
+        </div>
+
+        <div id="slide2" style="display: none;">
+            <h2 style="margin-bottom: 10px;">A lo largo de todo este tiempo nos has demostrado a todos ser una
+                <b><i>persona inigualable</i></b>.
+            </h2>
+            <h2 class="slide-element" id="slide2-text" style="margin-bottom: 200px; opacity: 0;">Todos los
+                <b><i>momentos</i></b> e <b><i>historias</i></b> que hemos vivido contigo son
+                <b><i>inolvidables</i></b>.
+            </h2>
+            <button id="slide2-button" onclick="javascript:slide3()" class="button"
+                style="font-size: 22px; opacity: 0; display: none;"><span><b>Siguiente</b></span></button>
+        </div>
+
+        <div id="slide3" style="display: none;">
+            <h2 style="margin-bottom: 10px;">Queremos agradecerte por todas esas veces que has sabido
+                <b><i>escucharnos</i></b> y <b><i>apoyarnos</i></b> cuando más lo hemos necesitado.
+            </h2>
+            <h2 class="slide-element" id="slide3-text" style="margin-bottom: 200px; opacity: 0;">Apreciamos mucho tus
+                <b><i>valores humanos</i></b> y el gran <b><i>corazón</i></b> que tienes...
+            </h2>
+            <button id="slide3-button" onclick="javascript:slide4()" class="button"
+                style="font-size: 22px; opacity: 0; display: none;"><span><b>Siguiente</b></span></button>
+        </div>
+
+        <div id="slide4" style="display: none;">
+            <h1 style="margin-bottom: 10px;"><b><i>GRACIAS...</i></b> por ser tal y como eres. <b><i>GRACIAS...</i></b>
+                por formar
+                parte de
+                nuestras
+                vidas.</h1>
+            <h2 class="slide-element" id="slide4-text" style="margin-bottom: 200px; opacity: 0;"><i>TE QUEREMOS
+                    MUCHO</i> ❤</h2>
+            <button id="slide4-button" onclick="javascript:slide5()" class="button"
+                style="font-size: 22px; opacity: 0; display: none;"><span><b>Siguiente</b></span></button>
+        </div>
+
+        <div id="slide5" style="display: none;">
+            <h1 style="margin-bottom: 10px;"><b>!TE HEMOS PREPARADO UNA PEQUEÑA SORPRESA!</b></h1>
+            <h2 class="slide-element" id="slide5-text" style="margin-bottom: 200px; opacity: 0;">Esperamos que sea de tu
+                agrado.</h2>
+            <button id="slide5-button" onclick="javascript:startWordle()" class="button"
+                style="font-size: 36px; opacity: 0; display: none;"><span><b>JUGAR</b></span></button>
+        </div>
+
+        <div id="gift" style="display: none;">
+            <!-- Google Font: Wendy One -->
+            <div id="ballons" class="container" style="transition: all 1.5s; opacity: 0;">
+                <div class="balloon">
+                    <div><span class="span"><b>S</b></span>
+                    </div>
+                    <div><span class="span"><b>E</b></span>
+                    </div>
+                    <div><span class="span"><b>R</b></span>
+                    </div>
+                    <div><span class="span"><b>G</b></span>
+                    </div>
+                    <div><span class="span"><b>I</b></span>
+                    </div>
+                    <div><span class="span"><b>O</b></span>
+                    </div>
+                </div>
+            </div>
+            <h1 id="happy-birthday-text"
+                style="margin-bottom: 10px; font-size: 70px; margin-bottom: 85px; opacity: 0; transition: all 1s;">
+                <b>!FELIZ CUMPLEAÑOS!</b>
+            </h1>
+            <h2 class="slide-element" id="name1-text" style="margin-bottom: 5px; opacity: 0; transition: all 0.5s">
+                <b><i>ALEX</i></b>
+            </h2>
+            <h2 class="slide-element" id="name2-text" style="margin-bottom: 5px; opacity: 0; transition: all 0.5s">
+                <b><i>ASIER</i></b>
+            </h2>
+            <h2 class="slide-element" id="name3-text" style="margin-bottom: 5px; opacity: 0; transition: all 0.5s">
+                <b><i>DIEGO</i></b>
+            </h2>
+            <h2 class="slide-element" id="name4-text" style="margin-bottom: 5px; opacity: 0; transition: all 0.5s">
+                <b><i>EMIL</i></b>
+            </h2>
+            <h2 class="slide-element" id="name5-text" style="margin-bottom: 5px; opacity: 0; transition: all 0.5s">
+                <b><i>FRAILE</i></b>
+            </h2>
+            <h2 class="slide-element" id="name6-text" style="margin-bottom: 5px; opacity: 0; transition: all 0.5s">
+                <b><i>JAVI</i></b>
+            </h2>
+            <h2 class="slide-element" id="name7-text" style="margin-bottom: 5px; opacity: 0; transition: all 0.5s">
+                <b><i>LEYRE</i></b>
+            </h2>
+            <h2 class="slide-element" id="name8-text" style="margin-bottom: 5px; opacity: 0; transition: all 0.5s">
+                <b><i>NICO</i></b>
+            </h2>
+            <h2 class="slide-element" id="name9-text" style="margin-bottom: 5px; opacity: 0; transition: all 0.5s">
+                <b><i>MANUPA</i></b>
+            </h2>
+            <div id="gift-button-container" class="wrap">
+                <button id="get-gift" style="display: none; opacity: 0; transition: all 1s; margin-top: 100px;"
+                    class="button-gift gift-button" onclick="javascript:gift()" class="button">CANJEAR
+                    REGALO</button>
+            </div>
+            <h1 class="slide-element" id="eldenring-key"
+                style="display: none; margin-top: 180px; opacity: 0; transition: all 1s">
+                XXXXX-XXXXX-XXXXX
+                </h2>
+        </div>
+
+        <div id="days" style="display: none; transition: all 1s;">
+            </b>
+            <h1 id="day" style="font-size: 80px;">DÍA 1</h1>
+        </div>
+    </div>
+
+    <div id="game-board" style="display: none; transition: all 0.5s; opacity: 0;">
+        <div id="header">
+            <br>
+            <h1><b>Wordle</b></h1>
+            <h4>Seregio Edition</h4>
+            <br>
+        </div>
+    </div>
+
+    <br>
+
+    <div id="keyboard-cont" style="display: none; transition: all 0.5s; opacity: 0;">
+        <div class="first-row">
+            <button class="keyboard-button ">q</button>
+            <button class="keyboard-button">w</button>
+            <button class="keyboard-button">e</button>
+            <button class="keyboard-button">r</button>
+            <button class="keyboard-button">t</button>
+            <button class="keyboard-button">y</button>
+            <button class="keyboard-button">u</button>
+            <button class="keyboard-button">i</button>
+            <button class="keyboard-button">o</button>
+            <button class="keyboard-button">p</button>
+        </div>
+        <div class="second-row">
+            <button class="keyboard-button">a</button>
+            <button class="keyboard-button">s</button>
+            <button class="keyboard-button">d</button>
+            <button class="keyboard-button">f</button>
+            <button class="keyboard-button">g</button>
+            <button class="keyboard-button">h</button>
+            <button class="keyboard-button">j</button>
+            <button class="keyboard-button">k</button>
+            <button class="keyboard-button">l</button>
+            <button class="keyboard-button">ñ</button>
+        </div>
+        <div class="third-row">
+            <button class="keyboard-button">Del</button>
+            <button class="keyboard-button">z</button>
+            <button class="keyboard-button">x</button>
+            <button class="keyboard-button">c</button>
+            <button class="keyboard-button">v</button>
+            <button class="keyboard-button">b</button>
+            <button class="keyboard-button">n</button>
+            <button class="keyboard-button">m</button>
+            <button class="keyboard-button">Enter</button>
+        </div>
+        <br>
+        <br>
+        <button id="sleep-button" onclick="javascript:sleep()" class="button"
+            style="font-size: 32px; display: none; transition: all 0.5s; opacity: 0;"><span><b>DORMIR</b></span></button>
+        <button id="win-button" onclick="javascript:win()" class="button"
+            style="font-size: 24px; display: none; transition: all 0.5s; opacity: 0;"><span><b>CONTINUAR</b></span></button>
+    </div>
+
+    <!-- JQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!-- ToastrJS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.js"></script>
+
+    <!-- Local JS -->
+    <script>
+        let slide = $(".slide")
+
+        function slide1() {
+            slide.fadeOut()
+            setTimeout(() => {
+                document.getElementById("start").style.display = "none"
+                document.getElementById("slide1").style.display = "block"
+                setTimeout(() => { document.getElementById("slide1-text").style.opacity = "100" }, 1500)
+                setTimeout(() => { document.getElementById("slide1-button").style.display = "inline" }, 2200)
+                setTimeout(() => { document.getElementById("slide1-button").style.opacity = "100" }, 2500)
+            }, 1000)
+            setTimeout(() => { slide.fadeIn() }, 1200)
+        }
+
+        function slide2() {
+            slide.fadeOut()
+            setTimeout(() => {
+                document.getElementById("slide1").style.display = "none"
+                document.getElementById("slide2").style.display = "block"
+                setTimeout(() => { document.getElementById("slide2-text").style.opacity = "100" }, 1500)
+                setTimeout(() => { document.getElementById("slide2-button").style.display = "inline" }, 2700)
+                setTimeout(() => { document.getElementById("slide2-button").style.opacity = "100" }, 3000)
+            }, 1000)
+            setTimeout(() => { slide.fadeIn() }, 1200)
+        }
+
+        function slide3() {
+            slide.fadeOut()
+            setTimeout(() => {
+                document.getElementById("slide2").style.display = "none"
+                document.getElementById("slide3").style.display = "block"
+                setTimeout(() => { document.getElementById("slide3-text").style.opacity = "100" }, 2000)
+                setTimeout(() => { document.getElementById("slide3-button").style.display = "inline" }, 3200)
+                setTimeout(() => { document.getElementById("slide3-button").style.opacity = "100" }, 3500)
+            }, 1000)
+            setTimeout(() => { slide.fadeIn() }, 1200)
+        }
+
+        function slide4() {
+            slide.fadeOut()
+            setTimeout(() => {
+                document.getElementById("slide3").style.display = "none"
+                document.getElementById("slide4").style.display = "block"
+                setTimeout(() => { document.getElementById("slide4-text").style.opacity = "100" }, 2500)
+                setTimeout(() => { document.getElementById("slide4-button").style.display = "inline" }, 3700)
+                setTimeout(() => { document.getElementById("slide4-button").style.opacity = "100" }, 4000)
+            }, 1000)
+            setTimeout(() => { slide.fadeIn() }, 1200)
+        }
+
+        function slide5() {
+            slide.fadeOut()
+            setTimeout(() => {
+                document.getElementById("slide4").style.display = "none"
+                document.getElementById("slide5").style.display = "block"
+                setTimeout(() => { document.getElementById("slide5-text").style.opacity = "100" }, 1500)
+                setTimeout(() => { document.getElementById("slide5-button").style.display = "inline" }, 2700)
+                setTimeout(() => { document.getElementById("slide5-button").style.opacity = "100" }, 3000)
+            }, 1000)
+            setTimeout(() => { slide.fadeIn() }, 1200)
+        }
+
+        let day = 1;
+        let started = false;
+        let sleeping = false;
+        function startWordle() {
+            slide.fadeOut()
+            setTimeout(() => {
+                document.getElementById("slide5").style.display = "none"
+                document.getElementById("days").style.display = "block"
+            }, 1000)
+            setTimeout(() => {
+                slide.fadeIn()
+                setTimeout(() => { console.log("Feliz cumpleaños Seregio!") }, 100)
+                setTimeout(() => { slide.fadeOut() }, 2000)
+                setTimeout(() => {
+                    if (!started) {
+                        started = true
+                        initBoard()
+                    }
+                }, 2500)
+            }, 1200)
+        }
+
+        function sleep() {
+            started = false
+            document.getElementById("game-board").style.opacity = "0"
+            document.getElementById("keyboard-cont").style.opacity = "0"
+            document.getElementById("sleep-button").style.opacity = "0"
+            setTimeout(() => {
+                document.getElementById("game-board").style.display = "none"
+                document.getElementById("keyboard-cont").style.display = "none"
+                document.getElementById("sleep-button").style.display = "none"
+            }, 500)
+            if (!sleeping) {
+                day++
+                document.getElementById("day").textContent = `DÍA ${day}`
+                setTimeout(() => {
+                    document.getElementById("days").style.display = "block"
+                }, 1000)
+                setTimeout(() => {
+                    slide.fadeIn()
+                    setTimeout(() => { console.log("Feliz cumpleaños Seregio!") }, 100)
+                    setTimeout(() => { slide.fadeOut() }, 2000)
+                    setTimeout(() => {
+                        if (!started) {
+                            $('.letter-row').remove();
+                            var keyboardButtons = document.getElementsByClassName("keyboard-button");
+                            for (var i = 0; i < keyboardButtons.length; i++) {
+                                keyboardButtons.item(i).removeAttribute('style');
+                            }
+                            guessesRemaining = NUMBER_OF_GUESSES;
+                            currentGuess = [];
+                            nextLetter = 0;
+                            started = true
+                            initBoard()
+                        }
+                    }, 2500)
+                }, 1200)
+            }
+        }
+
+        function win() {
+            started = false
+            document.getElementById("day").style.display = "none"
+            setTimeout(() => {
+                document.getElementById("slide").style.display = "block"
+            }, 500)
+
+            document.getElementById("game-board").style.opacity = "0"
+            document.getElementById("keyboard-cont").style.opacity = "0"
+            document.getElementById("sleep-button").style.opacity = "0"
+            setTimeout(() => {
+                document.getElementById("game-board").style.display = "none"
+                document.getElementById("keyboard-cont").style.display = "none"
+                document.getElementById("sleep-button").style.display = "none"
+            }, 500)
+            document.getElementById("slide").style.marginTop = "30px"
+            setTimeout(() => { document.getElementById("gift").style.display = "block" }, 500)
+            setTimeout(() => { document.getElementById("ballons").style.opacity = "100" }, 1000)
+            setTimeout(() => { document.getElementById("happy-birthday-text").style.opacity = "100" }, 3000)
+            setTimeout(() => { document.getElementById("name1-text").style.opacity = "100" }, 5000)
+            setTimeout(() => { document.getElementById("name2-text").style.opacity = "100" }, 5200)
+            setTimeout(() => { document.getElementById("name3-text").style.opacity = "100" }, 5400)
+            setTimeout(() => { document.getElementById("name4-text").style.opacity = "100" }, 5600)
+            setTimeout(() => { document.getElementById("name5-text").style.opacity = "100" }, 5800)
+            setTimeout(() => { document.getElementById("name6-text").style.opacity = "100" }, 6000)
+            setTimeout(() => { document.getElementById("name7-text").style.opacity = "100" }, 6200)
+            setTimeout(() => { document.getElementById("name8-text").style.opacity = "100" }, 6400)
+            setTimeout(() => { document.getElementById("name9-text").style.opacity = "100" }, 6600)
+            setTimeout(() => { document.getElementById("name9-text").style.opacity = "0" }, 12000)
+            setTimeout(() => { document.getElementById("name8-text").style.opacity = "0" }, 12200)
+            setTimeout(() => { document.getElementById("name7-text").style.opacity = "0" }, 12400)
+            setTimeout(() => { document.getElementById("name6-text").style.opacity = "0" }, 12600)
+            setTimeout(() => { document.getElementById("name5-text").style.opacity = "0" }, 12800)
+            setTimeout(() => { document.getElementById("name4-text").style.opacity = "0" }, 13000)
+            setTimeout(() => { document.getElementById("name3-text").style.opacity = "0" }, 13200)
+            setTimeout(() => { document.getElementById("name2-text").style.opacity = "0" }, 13400)
+            setTimeout(() => { document.getElementById("name1-text").style.opacity = "0" }, 13600)
+            setTimeout(() => {
+                document.getElementById("name1-text").style.display = "none"
+                document.getElementById("name2-text").style.display = "none"
+                document.getElementById("name3-text").style.display = "none"
+                document.getElementById("name4-text").style.display = "none"
+                document.getElementById("name5-text").style.display = "none"
+                document.getElementById("name6-text").style.display = "none"
+                document.getElementById("name7-text").style.display = "none"
+                document.getElementById("name8-text").style.display = "none"
+                document.getElementById("name9-text").style.display = "none"
+                document.getElementById("get-gift").style.display = "block"
+            }, 14100)
+            setTimeout(() => { document.getElementById("get-gift").style.opacity = "100" }, 14500)
+
+        }
+
+        function gift() {
+            document.getElementById("get-gift").style.opacity = "0"
+            document.getElementById("eldenring-key").style.display = "block"
+            setTimeout(() => {
+                document.getElementById("gift-button-container").style.display = "none"
+                document.getElementById("eldenring-key").style.opacity = "100"
+            }, 1000)
+        }
+
+        // Wordle
+        const NUMBER_OF_GUESSES = 6;
+        let guessesRemaining = NUMBER_OF_GUESSES;
+        let currentGuess = [];
+        let nextLetter = 0;
+        let rightGuessString = "eldenring";
+        const WORDS = [
+            "aaronicas",
+            "aaronicos",
+            "abalorios",
+            "abanicate",
+            "abanicate",
+            "abisinias",
+            "abrazotes",
+            "abrotanos",
+            "abudabies",
+            "academias",
+            "academica",
+            "acantonar",
+            "acerrojar",
+            "acerrojas",
+            "acerrojas",
+            "acongojar",
+            "acongojas",
+            "acongojas",
+            "acrobatas",
+            "acronimos",
+            "actinidos",
+            "acuchillo",
+            "acuatiles",
+            "adjetivos",
+            "adulteras",
+            "adulteras",
+            "adulteras",
+            "adulteros",
+            "aferrojar",
+            "aferrojas",
+            "aferrojas",
+            "aflojarse",
+            "aforismos",
+            "aforrarse",
+            "africanas",
+            "africanos",
+            "agilicese",
+            "agonistas",
+            "aguamanil",
+            "agudisima",
+            "agudisimo",
+            "aguerrida",
+            "aherrojar",
+            "aherrojas",
+            "aherrojas",
+            "aizoaceas",
+            "aizoaceos",
+            "alabancia",
+            "aladreros",
+            "albanesas",
+            "albaneses",
+            "aldehidos",
+            "aleatoria",
+            "alguacila",
+            "almacenes",
+            "almacenes",
+            "alquimica",
+            "alquimico",
+            "amorcitos",
+            "anagramas",
+            "andalusis",
+            "andabamos",
+            "anfiboles",
+            "angoleñas",
+            "angoleños",
+            "antebrazo",
+            "anteojero",
+            "Antequera",
+            "antojarse",
+            "antropico",
+            "antartica",
+            "antonimos",
+            "anecdotas",
+            "apiojarse",
+            "apodadora",
+            "apoderate",
+            "apruinosa",
+            "apruinoso",
+            "apatridas",
+            "apendices",
+            "apostoles",
+            "arabescos",
+            "arcaismos",
+            "argamasan",
+            "argelinas",
+            "argelinos",
+            "Argentina",
+            "argentina",
+            "ariqueñas",
+            "ariqueños",
+            "armonioso",
+            "arrastres",
+            "arrastres",
+            "arrocinar",
+            "arrogante",
+            "arrojarse",
+            "arsenales",
+            "artropodo",
+            "articulos",
+            "artifices",
+            "arandanos",
+            "asiaticas",
+            "asiaticos",
+            "asperrima",
+            "asperrimo",
+            "asturiana",
+            "atributos",
+            "atrojarse",
+            "attogramo",
+            "attojulio",
+            "attolitro",
+            "attometro",
+            "attoohmio",
+            "attovatio",
+            "aturdidor",
+            "auriculas",
+            "auriferas",
+            "australes",
+            "austriaca",
+            "austriaco",
+            "austriaca",
+            "austriaco",
+            "autogiros",
+            "autonomia",
+            "automatas",
+            "autonimos",
+            "autonomas",
+            "autonomos",
+            "aerostats",
+            "bagdadies",
+            "bahreinis",
+            "bajabamos",
+            "balancees",
+            "balancees",
+            "baquetazo",
+            "baupreses",
+            "bavienses",
+            "bayamesas",
+            "bayameses",
+            "bayonetas",
+            "bañabamos",
+            "beatifica",
+            "beatifico",
+            "beatifica",
+            "beatifico",
+            "beatifica",
+            "beiruties",
+            "bellisima",
+            "bellisimo",
+            "bengalies",
+            "besabamos",
+            "bicefalas",
+            "bicefalos",
+            "binoculos",
+            "birladora",
+            "bisturies",
+            "bisilabas",
+            "bisilabos",
+            "biografos",
+            "bogotanas",
+            "bogotanos",
+            "boletines",
+            "boliviana",
+            "boliviano",
+            "bolsillos",
+            "bolivares",
+            "borbonica",
+            "borceguis",
+            "bosniacas",
+            "bosniacos",
+            "bosniacas",
+            "bosniacos",
+            "botaremos",
+            "botariais",
+            "botasteis",
+            "botabamos",
+            "botanicas",
+            "botanicos",
+            "botaramos",
+            "botaremos",
+            "botasemos",
+            "botemonos",
+            "brasilera",
+            "brasilero",
+            "brasileña",
+            "braveador",
+            "brazalete",
+            "britanica",
+            "bromistas",
+            "broqueles",
+            "brumadora",
+            "bufonicas",
+            "bufonicos",
+            "bulimicas",
+            "bulimicos",
+            "burilador",
+            "busquedas",
+            "caballito",
+            "cabestros",
+            "cachondeo",
+            "cadaveres",
+            "cajoncito",
+            "calafateo",
+            "caldenses",
+            "camaradas",
+            "cambistas",
+            "caminaron",
+            "camisetas",
+            "campantes",
+            "campanula",
+            "canciones",
+            "cantinela",
+            "canibales",
+            "caniculas",
+            "canonicas",
+            "canonicos",
+            "canonigos",
+            "capciosas",
+            "capciosos",
+            "capitales",
+            "capitanes",
+            "capitulos",
+            "caraqueña",
+            "Carcasona",
+            "caribeñas",
+            "caribeños",
+            "carmesies",
+            "carraspeo",
+            "caratulas",
+            "carisimas",
+            "carisimos",
+            "cascadura",
+            "castañear",
+            "castillos",
+            "casemonos",
+            "catalanas",
+            "catalanes",
+            "catolizar",
+            "catabamos",
+            "cataforas",
+            "caudillos",
+            "cebaderas",
+            "cecografo",
+            "cedulares",
+            "cegesimal",
+            "celulares",
+            "cencerreo",
+            "centesima",
+            "centimano",
+            "chapurreo",
+            "chavistas",
+            "chechenas",
+            "chechenos",
+            "chiquitas",
+            "chiquitos",
+            "chiricana",
+            "chirlador",
+            "chirleada",
+            "chismoteo",
+            "chocadora",
+            "chorraera",
+            "chorreras",
+            "chicharos",
+            "cigoñinos",
+            "cigüeñato",
+            "cimientes",
+            "clarinete",
+            "clarisimo",
+            "clausulas",
+            "clausulas",
+            "clavicula",
+            "clausulas",
+            "colectiva",
+            "colectivo",
+            "comuneras",
+            "comuneros",
+            "concurran",
+            "concusion",
+            "conduzcan",
+            "congoleña",
+            "congelese",
+            "consistas",
+            "consistas",
+            "consultas",
+            "contagies",
+            "continuar",
+            "continuas",
+            "continuas",
+            "continuas",
+            "convencer",
+            "corazones",
+            "coroneles",
+            "cremonesa",
+            "cretenses",
+            "crismones",
+            "crustaceo",
+            "cubiletes",
+            "cucurucho",
+            "cuestuosa",
+            "cuestuoso",
+            "culpables",
+            "cultismos",
+            "cumaneses",
+            "cuticulas",
+            "cuzqueñas",
+            "cuzqueños",
+            "cantabras",
+            "cantabros",
+            "complices",
+            "dañadoras",
+            "dañadores",
+            "decagramo",
+            "decajulio",
+            "decaohmio",
+            "decametro",
+            "delatador",
+            "demoniaca",
+            "demoniaco",
+            "demoniaca",
+            "demoniaco",
+            "dentistas",
+            "denuncies",
+            "depositos",
+            "desaboren",
+            "desabores",
+            "desabores",
+            "desalojar",
+            "desalojas",
+            "desalojos",
+            "desalojas",
+            "desastres",
+            "desbancan",
+            "descabezo",
+            "descaspes",
+            "descolmes",
+            "desecador",
+            "desecante",
+            "desecarse",
+            "desemboja",
+            "desembojo",
+            "desemboja",
+            "desembojo",
+            "desencoja",
+            "desencojo",
+            "desenojar",
+            "desenojas",
+            "desenojas",
+            "desforzar",
+            "desmaroja",
+            "desmarojo",
+            "desmaroja",
+            "desmarojo",
+            "desojarse",
+            "despertad",
+            "despiojar",
+            "despiojas",
+            "despiojas",
+            "despidete",
+            "desquites",
+            "desquites",
+            "diabetica",
+            "diabetico",
+            "diamantes",
+            "dibujador",
+            "dicotomia",
+            "dientitos",
+            "difamador",
+            "dificiles",
+            "digitales",
+            "dimanaste",
+            "diputadas",
+            "diputados",
+            "discursos",
+            "disecador",
+            "disfraces",
+            "disfraces",
+            "dispenses",
+            "dispenses",
+            "disputada",
+            "disputado",
+            "disquetes",
+            "disquitos",
+            "distopica",
+            "distopico",
+            "doblonada",
+            "dolarizar",
+            "domabamos",
+            "dopemonos",
+            "dubitable",
+            "dulzarron",
+            "dupondios",
+            "durisimas",
+            "durisimos",
+            "ebanistas",
+            "ecuanimes",
+            "ejercitos",
+            "elefantes",
+            "elitistas",
+            "elocuente",
+            "eluctable",
+            "electrica",
+            "embadurna",
+            "embadurno",
+            "emborucar",
+            "empecedor",
+            "encojarse",
+            "encunetar",
+            "engendres",
+            "enquistas",
+            "enquistas",
+            "enrehojar",
+            "enrehojas",
+            "enrehojas",
+            "enrojarse",
+            "ensenadas",
+            "ensenados",
+            "ensenamos",
+            "ensenarse",
+            "enseñadas",
+            "enseñados",
+            "enseñamos",
+            "entrecoja",
+            "entrecojo",
+            "envidador",
+            "epidemias",
+            "epidemica",
+            "epitafios",
+            "equivocas",
+            "equivocos",
+            "erratiles",
+            "erectiles",
+            "escolteis",
+            "escoñetar",
+            "escapulas",
+            "esdrujula",
+            "esdrujulo",
+            "esfericas",
+            "esfericos",
+            "eslovacas",
+            "eslovacos",
+            "Eslovenia",
+            "espantara",
+            "espantara",
+            "espartana",
+            "españolas",
+            "españoles",
+            "esperanto",
+            "espolones",
+            "espatulas",
+            "espiritus",
+            "estallido",
+            "estatales",
+            "estelares",
+            "estrellas",
+            "estridulo",
+            "estridulo",
+            "estabamos",
+            "esteriles",
+            "estimulos",
+            "etnonimos",
+            "evocadora",
+            "evocativa",
+            "evocativo",
+            "exahercio",
+            "exakelvin",
+            "exaltador",
+            "exavoltio",
+            "exhibiste",
+            "exhumador",
+            "explicate",
+            "explicito",
+            "explicito",
+            "explicate",
+            "expresate",
+            "expositos",
+            "extremeña",
+            "fantasmas",
+            "faraonica",
+            "faraonico",
+            "fascistas",
+            "fasciculo",
+            "fatalizar",
+            "fechurias",
+            "federales",
+            "fenomenos",
+            "ferrovial",
+            "filetillo",
+            "Filipinas",
+            "filipinas",
+            "filipinos",
+            "firmantes",
+            "flamantes",
+            "floristas",
+            "folclores",
+            "folklores",
+            "foliculos",
+            "foneticas",
+            "foneticos",
+            "francesas",
+            "franceses",
+            "frasquito",
+            "frenesies",
+            "friaticas",
+            "friaticos",
+            "fucilazos",
+            "fumabamos",
+            "fusilazos",
+            "futbolera",
+            "futbolero",
+            "galantees",
+            "galantees",
+            "galiciana",
+            "gallinita",
+            "galactica",
+            "galactico",
+            "ganabamos",
+            "garabatos",
+            "gavilanes",
+            "generales",
+            "germanico",
+            "gerundios",
+            "geografos",
+            "glaciales",
+            "glaciares",
+            "glutamina",
+            "golpecito",
+            "golpistas",
+            "gondolero",
+            "gordisima",
+            "gordisimo",
+            "gorriones",
+            "graduable",
+            "grafomana",
+            "grafomano",
+            "granadies",
+            "granjeras",
+            "granjeros",
+            "granifuga",
+            "granifugo",
+            "gravisima",
+            "gravisimo",
+            "groserias",
+            "gruñidora",
+            "guaireñas",
+            "guaireños",
+            "guaranies",
+            "guarismos",
+            "Guatemala",
+            "gubiletes",
+            "guepardos",
+            "guiñadora",
+            "guiñaposo",
+            "gustirrin",
+            "habriamos",
+            "hagamonos",
+            "haitianas",
+            "haitianos",
+            "hawaianas",
+            "hawaianos",
+            "helenicas",
+            "helenicos",
+            "henchidor",
+            "herculana",
+            "herculano",
+            "herculina",
+            "herculino",
+            "heredable",
+            "herederas",
+            "herederos",
+            "higienica",
+            "higienico",
+            "hilabamos",
+            "hinojarse",
+            "hipotecas",
+            "hipotecas",
+            "hiponimos",
+            "histamina",
+            "histidina",
+            "historias",
+            "historica",
+            "holandesa",
+            "holograma",
+            "holistica",
+            "holonimos",
+            "homologas",
+            "homologas",
+            "homofonos",
+            "homologas",
+            "homologos",
+            "homonimos",
+            "hondureña",
+            "horadador",
+            "hozadoras",
+            "hozadores",
+            "hubierais",
+            "hubiereis",
+            "hubisteis",
+            "huilenses",
+            "hurtadora",
+            "husmeador",
+            "huerfanas",
+            "huerfanos",
+            "huespedes",
+            "imaginate",
+            "imbeciles",
+            "incomodas",
+            "incolumes",
+            "Indonesia",
+            "indonesia",
+            "inducidor",
+            "indigenas",
+            "inhospita",
+            "inmodicas",
+            "inmodicos",
+            "inmoviles",
+            "inspirate",
+            "insipidas",
+            "insipidos",
+            "insolitos",
+            "intimaras",
+            "intimares",
+            "intimaras",
+            "intimases",
+            "intrepida",
+            "intrepido",
+            "invalidos",
+            "jamoncito",
+            "japonesas",
+            "japoneses",
+            "jovencito",
+            "joyeleros",
+            "juanetuda",
+            "juanetudo",
+            "juguetito",
+            "jurabamos",
+            "kosovares",
+            "kuwaities",
+            "laboriosa",
+            "laborioso",
+            "laborosas",
+            "laborosos",
+            "ladrillos",
+            "lambiston",
+            "lamininas",
+            "legitimas",
+            "legitimas",
+            "legitimas",
+            "legitimos",
+            "lendrosas",
+            "lendrosos",
+            "lenguajes",
+            "leopardos",
+            "lesbianas",
+            "letificas",
+            "letificos",
+            "leucemica",
+            "leucemico",
+            "levabamos",
+            "LGBTfobia",
+            "LGTBfobia",
+            "liberales",
+            "libertate",
+            "librerias",
+            "libelulas",
+            "ligabamos",
+            "limitares",
+            "limabamos",
+            "lipidicas",
+            "lipidicos",
+            "liquidate",
+            "literales",
+            "lloriqueo",
+            "lorquiana",
+            "lorquiano",
+            "lorquinas",
+            "lorquinos",
+            "lubriques",
+            "lubriques",
+            "lucrativa",
+            "lucrativo",
+            "lumbrosas",
+            "lumbrosos",
+            "luminicas",
+            "luminicos",
+            "lusitanas",
+            "lusitanos",
+            "machaqueo",
+            "machistas",
+            "macrismos",
+            "macristas",
+            "magrebies",
+            "maltrecho",
+            "malisimas",
+            "malisimos",
+            "mamabamos",
+            "manacoris",
+            "mandarina",
+            "manecilla",
+            "manipuleo",
+            "manojillo",
+            "manojitos",
+            "manteador",
+            "manticora",
+            "maravedis",
+            "marceador",
+            "maricones",
+            "mariquita",
+            "marmoleña",
+            "marmoleño",
+            "marmolina",
+            "marmolino",
+            "marmoroso",
+            "marquitas",
+            "marroquis",
+            "Marruecos",
+            "marruecos",
+            "marxistas",
+            "masacrada",
+            "masonicas",
+            "masonicos",
+            "matagalpa",
+            "matricula",
+            "matricula",
+            "matrimoño",
+            "matabamos",
+            "maullador",
+            "mauritana",
+            "mecanicas",
+            "mecanicos",
+            "medicinal",
+            "mejicanas",
+            "mejicanos",
+            "mejorable",
+            "menfitico",
+            "merculina",
+            "merculino",
+            "meronimos",
+            "meticales",
+            "metionina",
+            "metaforas",
+            "mexicanas",
+            "mexicanos",
+            "mezclable",
+            "militares",
+            "millonada",
+            "mimabamos",
+            "minasteis",
+            "minerales",
+            "mintieras",
+            "mintieres",
+            "mintieses",
+            "minuteros",
+            "minabamos",
+            "modelable",
+            "mojigatas",
+            "moldeador",
+            "molletudo",
+            "moleculas",
+            "momentito",
+            "monegasca",
+            "monticulo",
+            "monzonico",
+            "monoculos",
+            "monologos",
+            "monomeros",
+            "monotonas",
+            "monotonos",
+            "mosquetes",
+            "motejador",
+            "motivador",
+            "motrileña",
+            "motrileño",
+            "muchachil",
+            "muciferas",
+            "muciferos",
+            "mugidoras",
+            "mugidores",
+            "mundiales",
+            "musicales",
+            "mutilador",
+            "muñequita",
+            "nacararse",
+            "nadaremos",
+            "nadaramos",
+            "nadaremos",
+            "nadasemos",
+            "nanojulio",
+            "nanolitro",
+            "nanoohmio",
+            "nanovatio",
+            "nanometro",
+            "natalicio",
+            "naturales",
+            "naufragas",
+            "naufragas",
+            "naviculas",
+            "negabamos",
+            "neologico",
+            "nepalesas",
+            "nepaleses",
+            "Nicaragua",
+            "nivelador",
+            "noematico",
+            "nonillizo",
+            "noticioso",
+            "naufragas",
+            "naufragos",
+            "oaxaqueña",
+            "oaxaqueño",
+            "oceanicas",
+            "oceanicos",
+            "ohmimetro",
+            "omicrones",
+            "omoplatos",
+            "onanistas",
+            "oposicion",
+            "orbitales",
+            "ordenaban",
+            "ordenabas",
+            "ordenadas",
+            "ordenados",
+            "ordenamos",
+            "ordenando",
+            "ordenaran",
+            "ordenaras",
+            "ordenares",
+            "ordenaron",
+            "ordenaran",
+            "ordenaras",
+            "ordenaria",
+            "ordenasen",
+            "ordenases",
+            "ordenaste",
+            "ordenemos",
+            "ordeñaban",
+            "ordeñabas",
+            "ordeñadas",
+            "ordeñador",
+            "ordeñados",
+            "ordeñamos",
+            "ordeñando",
+            "ordeñaran",
+            "ordeñaras",
+            "ordeñares",
+            "ordeñaron",
+            "ordeñaran",
+            "ordeñaras",
+            "ordeñaria",
+            "ordeñasen",
+            "ordeñases",
+            "ordeñaste",
+            "ordeñemos",
+            "orquestas",
+            "orquestas",
+            "oxipetalo",
+            "pajarillo",
+            "pajaritos",
+            "pakistani",
+            "paladines",
+            "palenques",
+            "Palestina",
+            "palestina",
+            "panameñas",
+            "panameños",
+            "pandemias",
+            "panfletos",
+            "panlexico",
+            "pantallas",
+            "pantuflas",
+            "paniculas",
+            "papalotes",
+            "papapleto",
+            "Paquistan",
+            "parlantes",
+            "parabamos",
+            "parabolas",
+            "paronimos",
+            "pasquines",
+            "pastorees",
+            "pastorees",
+            "pasabamos",
+            "paticojas",
+            "paticojos",
+            "patibulos",
+            "patogenas",
+            "patogenos",
+            "pegabamos",
+            "peluconas",
+            "pelabamos",
+            "peliculas",
+            "peplomero",
+            "perdieron",
+            "persistas",
+            "persistid",
+            "pilastras",
+            "pinaculos",
+            "piramides",
+            "pizpireta",
+            "pizpireto",
+            "platenses",
+            "podriamos",
+            "polinesia",
+            "polonesas",
+            "poloneses",
+            "polemicas",
+            "polemicos",
+            "poligonos",
+            "pondremos",
+            "pondriais",
+            "populares",
+            "posguerra",
+            "presentes",
+            "presentes",
+            "pretextos",
+            "previstas",
+            "principes",
+            "principes",
+            "produzcan",
+            "profetica",
+            "propongas",
+            "propongas",
+            "prorrogas",
+            "prorrogas",
+            "protestas",
+            "proteinas",
+            "provistas",
+            "pruinosas",
+            "pruinosos",
+            "prusianas",
+            "prusianos",
+            "practicos",
+            "principes",
+            "prorrogas",
+            "prostatas",
+            "pudierais",
+            "pudiereis",
+            "pudisteis",
+            "purulenta",
+            "purulento",
+            "pustulosa",
+            "pustuloso",
+            "puerperas",
+            "queriendo",
+            "querremos",
+            "querriais",
+            "queriamos",
+            "quetzales",
+            "quietitas",
+            "quietitos",
+            "quilatera",
+            "quinarios",
+            "quintador",
+            "quintañon",
+            "quisieran",
+            "quisieras",
+            "quisieren",
+            "quisieres",
+            "quisieron",
+            "quisticas",
+            "quisticos",
+            "rabanitos",
+            "radicales",
+            "radiculas",
+            "rastrojar",
+            "rastrojas",
+            "rastrojos",
+            "rastrojas",
+            "reactores",
+            "rebelando",
+            "rebotarse",
+            "recebojar",
+            "redimible",
+            "reestreno",
+            "refugiada",
+            "refugiado",
+            "regimenes",
+            "relatador",
+            "remojarse",
+            "resueltas",
+            "resueltos",
+            "resumenes",
+            "retumbaba",
+            "retabamos",
+            "reticulas",
+            "reticulos",
+            "reuniones",
+            "reuniones",
+            "revelando",
+            "revotarse",
+            "ridiculas",
+            "ridiculos",
+            "rifabamos",
+            "rocinales",
+            "rogabamos",
+            "sabaticas",
+            "sabaticos",
+            "saharauis",
+            "salabamos",
+            "samnitica",
+            "samnitico",
+            "sanabamos",
+            "sarmatica",
+            "sarmatico",
+            "satanicas",
+            "satanicos",
+            "satelites",
+            "sazonador",
+            "sefardies",
+            "segundera",
+            "segundero",
+            "selenitas",
+            "seleucida",
+            "semanales",
+            "semestres",
+            "semaforos",
+            "sestercio",
+            "sibaritas",
+            "sicologas",
+            "sicologos",
+            "significa",
+            "significa",
+            "silbadora",
+            "silvatica",
+            "silvatico",
+            "silabicas",
+            "silabicos",
+            "simbolica",
+            "simbolico",
+            "simientes",
+            "simpatica",
+            "simpatico",
+            "sinonimos",
+            "siquiatra",
+            "sisadoras",
+            "sisadores",
+            "sisimbrio",
+            "sitiadora",
+            "sitibunda",
+            "sitibundo",
+            "sobrecoja",
+            "sobrecojo",
+            "sobrepasa",
+            "sobrepasa",
+            "sodomitas",
+            "solfeador",
+            "solicitas",
+            "solicitas",
+            "solterona",
+            "solicitas",
+            "solicitos",
+            "solisimas",
+            "solisimos",
+            "sombreros",
+            "somnifera",
+            "somnifero",
+            "somaticas",
+            "somaticos",
+            "someticas",
+            "someticos",
+            "sonadoras",
+            "sonadores",
+            "sonariais",
+            "sonasteis",
+            "sonabamos",
+            "sonambula",
+            "sonambulo",
+            "sonaramos",
+            "sonaremos",
+            "sonasemos",
+            "sorbedora",
+            "sosacador",
+            "sosiegate",
+            "sovietica",
+            "sovietico",
+            "soñadoras",
+            "soñadores",
+            "soñaremos",
+            "soñariais",
+            "soñasteis",
+            "soñabamos",
+            "soñaramos",
+            "soñaremos",
+            "soñasemos",
+            "subitanea",
+            "subitaneo",
+            "submarino",
+            "subsonica",
+            "subsonico",
+            "sucedaneo",
+            "sucrenses",
+            "sudanesas",
+            "sudaneses",
+            "Sudafrica",
+            "sugeridor",
+            "sulfurosa",
+            "sulfurica",
+            "sulfurico",
+            "sumadoras",
+            "sumadores",
+            "suasticas",
+            "sanscrita",
+            "sanscrito",
+            "septuplas",
+            "septuples",
+            "septuplos",
+            "sextuplas",
+            "sextuples",
+            "sextuplos",
+            "tabificas",
+            "tabificos",
+            "taciturna",
+            "taciturno",
+            "Tailandia",
+            "taiwanesa",
+            "tajabamos",
+            "talibanes",
+            "talmudica",
+            "talmudico",
+            "tartarica",
+            "tartarico",
+            "tarandose",
+            "tarupidas",
+            "tarupidos",
+            "tectonica",
+            "tectonico",
+            "telepatia",
+            "telefonos",
+            "teluricas",
+            "teluricos",
+            "temblores",
+            "tematicas",
+            "tematicos",
+            "tendremos",
+            "tendriais",
+            "tenedoras",
+            "tenedores",
+            "tenientes",
+            "tenuisimo",
+            "tenifugas",
+            "tenifugos",
+            "teoforica",
+            "teoforico",
+            "teogonias",
+            "teogonica",
+            "teogonico",
+            "teologica",
+            "teologico",
+            "teoretica",
+            "teoretico",
+            "teosofias",
+            "teosofica",
+            "teosofico",
+            "ternisima",
+            "ternisimo",
+            "terregosa",
+            "terregoso",
+            "terraquea",
+            "terraqueo",
+            "terricola",
+            "terrifica",
+            "terrifico",
+            "terrigena",
+            "testarron",
+            "tetanicas",
+            "tetanicos",
+            "teandrica",
+            "teandrico",
+            "tibetanas",
+            "tibetanos",
+            "ticonicas",
+            "ticonicos",
+            "tikrities",
+            "tiranicas",
+            "tiranicos",
+            "titanicas",
+            "titanicos",
+            "tochibies",
+            "tocabamos",
+            "togolesas",
+            "togoleses",
+            "tomabamos",
+            "toneladas",
+            "tontiloca",
+            "tontiloco",
+            "tontisima",
+            "tontisimo",
+            "toponimos",
+            "toracicas",
+            "toracicos",
+            "toraxicas",
+            "toraxicos",
+            "totemicas",
+            "totemicos",
+            "tractoreo",
+            "traduzcan",
+            "traeremos",
+            "traeriais",
+            "traigamos",
+            "trajerais",
+            "trajereis",
+            "trasfojar",
+            "trasfojas",
+            "trasfojas",
+            "trashojar",
+            "trashojas",
+            "trashojas",
+            "tredecima",
+            "tredecimo",
+            "triangulo",
+            "triangulo",
+            "tribunica",
+            "tribunico",
+            "tridentes",
+            "trifurcar",
+            "trigemina",
+            "trigemino",
+            "trigesima",
+            "trigesimo",
+            "trisilaba",
+            "trisilabo",
+            "triangulo",
+            "triasicas",
+            "triasicos",
+            "trompeteo",
+            "tulipanes",
+            "turmodigo",
+            "turibulos",
+            "turiferas",
+            "turiferos",
+            "turistica",
+            "turistico",
+            "tusigenas",
+            "tusigenos",
+            "tuvierais",
+            "tuviereis",
+            "tuvisteis",
+            "tartricas",
+            "tartricos",
+            "turquicas",
+            "turquicos",
+            "ubicables",
+            "uberrimas",
+            "uberrimos",
+            "ucronicas",
+            "ucronicos",
+            "ugaritico",
+            "ultimador",
+            "undecimas",
+            "undecimos",
+            "universos",
+            "urologias",
+            "urologica",
+            "urologico",
+            "utilisima",
+            "utilisimo",
+            "vacilador",
+            "vaginales",
+            "vanilocuo",
+            "variantes",
+            "vasconica",
+            "vasconico",
+            "vaticanas",
+            "vaticanos",
+            "vaupenses",
+            "vayamonos",
+            "vegetales",
+            "vehiculos",
+            "Venezuela",
+            "venideros",
+            "verdinoso",
+            "verdugazo",
+            "vergoñosa",
+            "vergoñoso",
+            "vernacula",
+            "vernaculo",
+            "verosimil",
+            "versiculo",
+            "veratrico",
+            "veridicas",
+            "veridicos",
+            "vestiamos",
+            "vesanicas",
+            "vesanicos",
+            "vesiculas",
+            "vetabamos",
+            "vezabamos",
+            "viajadora",
+            "viejecito",
+            "viejisima",
+            "viejisimo",
+            "vienenses",
+            "vigesimas",
+            "vigesimos",
+            "vinaticas",
+            "vinaticos",
+            "vinicolas",
+            "viniferas",
+            "viniferos",
+            "violaceas",
+            "violaceos",
+            "virilizar",
+            "visigodas",
+            "visigodos",
+            "vitaminas",
+            "vivificas",
+            "vivificos",
+            "vivisimas",
+            "vivisimos",
+            "volcanica",
+            "volcanico",
+            "volatiles",
+            "volumenes",
+            "vomitador",
+            "votaremos",
+            "votariais",
+            "votasteis",
+            "votabamos",
+            "votaramos",
+            "votaremos",
+            "votasemos",
+            "vueltitas",
+            "vulcanica",
+            "vulcanico",
+            "xalapeñas",
+            "xalapeños",
+            "xenofobas",
+            "xenofobos",
+            "xerofilas",
+            "xerofilos",
+            "xilofagos",
+            "xilofonos",
+            "yugoslava",
+            "yugoslavo",
+            "zacapelas",
+            "zaheridor",
+            "zoologica",
+            "zoologico",
+            "zoantropo",
+            "zurcidora",
+            "acuciante",
+            "agridulce",
+            "aguerrido",
+            "alabastro",
+            "alambique",
+            "alcaparra",
+            "altercado",
+            "aspillera",
+            "automovil",
+            "autoridad",
+            "bandidaje",
+            "belladona",
+            "bendicion",
+            "bergantin",
+            "bocadillo",
+            "cabalgata",
+            "cajetilla",
+            "caldereta",
+            "caligrama",
+            "callejero",
+            "carbonero",
+            "centurion",
+            "chasquear",
+            "cobertura",
+            "codificar",
+            "comadreja",
+            "compresor",
+            "confitura",
+            "contrario",
+            "debilitar",
+            "decadente",
+            "derrotero",
+            "desajuste",
+            "desplante",
+            "diciembre",
+            "dictadura",
+            "dispuesto",
+            "domicilio",
+            "economato",
+            "educativo",
+            "ejercicio",
+            "electrico",
+            "engranaje",
+            "esparrago",
+            "esquiador",
+            "estupendo",
+            "extractor",
+            "ferrovial",
+            "flautista",
+            "forastero",
+            "fotocopia",
+            "fotografo",
+            "fragmento",
+            "gabardina",
+            "ganaderia",
+            "gladiador",
+            "grafitero",
+            "guerrilla",
+            "hacendado",
+            "hidrogeno",
+            "hipodromo",
+            "hipogrifo",
+            "hortelano",
+            "humanista",
+            "idealista",
+            "impostura",
+            "impresora",
+            "increible",
+            "indefenso",
+            "indirecta",
+            "inquilino",
+            "intelecto",
+            "intervalo",
+            "jardinero",
+            "juguetero",
+            "juramento",
+            "kamasutra",
+            "kilovatio",
+            "labandera",
+            "lactancia",
+            "liderazgo",
+            "limpiador",
+            "magistral",
+            "malaquita",
+            "maleficio",
+            "mandarina",
+            "mantecado",
+            "maravilla",
+            "masajista",
+            "melodrama",
+            "menguante",
+            "mercancia",
+            "merendero",
+            "militante",
+            "miserable",
+            "modalidad",
+            "monarquia",
+            "municipal",
+            "narrativa",
+            "naufragio",
+            "necesidad",
+            "netiqueta",
+            "notificar",
+            "nutritivo",
+            "obediente",
+            "obstaculo",
+            "obstinado",
+            "ocultismo",
+            "oleoducto",
+            "optimizar",
+            "ordenanza",
+            "organismo",
+            "paciencia",
+            "palabrota",
+            "palaciego",
+            "palosanto",
+            "panaderia",
+            "pandereta",
+            "paparazzi",
+            "parihuela",
+            "paritario",
+            "parroquia",
+            "partitura",
+            "patologia",
+            "peliaguda",
+            "pergamino",
+            "periferia",
+            "pescadero",
+            "petirrojo",
+            "petrolero",
+            "pistolero",
+            "plusmarca",
+            "polvareda",
+            "populacho",
+            "postventa",
+            "prematuro",
+            "productor",
+            "profesion",
+            "promiscuo",
+            "propileno",
+            "proyectil",
+            "quebranto",
+            "rabadilla",
+            "ralladura",
+            "ramillete",
+            "rastafari",
+            "reasignar",
+            "rebobinar",
+            "recepcion",
+            "recorrido",
+            "redefinir",
+            "reestreno",
+            "refugiado",
+            "registrar",
+            "rematador",
+            "repostero",
+            "requisito",
+            "resguardo",
+            "respuesta",
+            "resquicio",
+            "restaurar",
+            "restregar",
+            "revulsivo",
+            "rodillera",
+            "rotuliano",
+            "rutinario",
+            "sacerdote",
+            "sacristia",
+            "sagitario",
+            "salchicha",
+            "sarcofago",
+            "sarmiento",
+            "seguridad",
+            "semejante",
+            "seminario",
+            "servicial",
+            "significa",
+            "siguiente",
+            "simulacro",
+            "sintetico",
+            "sobrepeso",
+            "sociologo",
+            "sombrilla",
+            "tabernero",
+            "tabulador",
+            "televisor",
+            "temporada",
+            "trampolin",
+            "tranquilo",
+            "traspasar",
+            "triangulo",
+            "trimestre",
+            "trinchera",
+            "trinquete",
+            "turistico",
+            "utensilio",
+            "vectorial",
+            "vencedora",
+            "veraniego",
+            "vestuario",
+            "vinagreta",
+            "voracidad",
+            "zanahoria",
+            "zapatilla",
+            "sitaucion",
+            "reservado",
+            "ciudadano",
+            "resucitar",
+            "aniquilar",
+            "sensacion",
+            "carretera",
+            "americano",
+            "funcional",
+            "excepcion",
+            "ventilado",
+            "escotilla",
+            "relampago",
+            "serenidad",
+            "asolacion",
+            "retrasado",
+            "subnormal",
+            "estocolmo",
+            "entrenado",
+            "actuacion",
+            "internado",
+            "cucharita",
+            "increible",
+            "organismo",
+            "espejismo",
+            "horoscopo",
+            "amistades",
+            "eldenring"
+        ]
+
+        function initBoard() {
+            let board = document.getElementById("game-board");
+
+            for (let i = 0; i < NUMBER_OF_GUESSES; i++) {
+                let row = document.createElement("div")
+                row.className = "letter-row"
+
+                for (let j = 0; j < 9; j++) {
+                    let box = document.createElement("div")
+                    box.className = "letter-box"
+                    row.appendChild(box)
+                }
+
+                board.style.display = "flex"
+                document.getElementById("keyboard-cont").style.display = "flex"
+                board.appendChild(row)
+                setTimeout(() => {
+                    document.getElementById("game-board").style.opacity = "100"
+                    document.getElementById("keyboard-cont").style.opacity = "100"
+                }, 100)
+            }
+        }
+
+        function Color2HEX(c) {
+            var hex = Number(c).toString(16)
+            return hex.length == 1 ? "0" + hex : hex;
+        }
+
+        function RGB2HEX(r, g, b) {
+            return "#" + Color2HEX(r) + Color2HEX(g) + Color2HEX(b);
+        }
+
+        function shadeKeyBoard(letter, color) {
+            for (const elem of document.getElementsByClassName("keyboard-button")) {
+                if (elem.textContent === letter) {
+                    let oldColorRGB = elem.style.backgroundColor.replace("rgb", "")
+                        .replace("(", "")
+                        .replace(")", "")
+                        .replace(" ", "")
+                        .split(",")
+
+                    let oldColorHEX = ""
+
+                    if (oldColorRGB[0] != "") {
+                        oldColorHEX = RGB2HEX(oldColorRGB[0], oldColorRGB[1], oldColorRGB[2])
+                    }
+
+                    if (oldColorHEX === '#6aaa64') {
+                        return
+                    }
+
+                    if (oldColorHEX === '#c9b458' && color !== '#6aaa64') {
+                        return
+                    }
+
+                    elem.style.backgroundColor = color
+                    elem.style.color = "white"
+                    break
+                }
+            }
+        }
+
+        function deleteLetter() {
+            let row = document.getElementsByClassName("letter-row")[6 - guessesRemaining]
+            let box = row.children[nextLetter - 1]
+            box.textContent = ""
+            box.classList.remove("filled-box")
+            currentGuess.pop()
+            nextLetter -= 1
+        }
+
+        function checkGuess() {
+            let row = document.getElementsByClassName("letter-row")[6 - guessesRemaining]
+            let guessString = ""
+            let rightGuess = Array.from(rightGuessString)
+
+            for (const val of currentGuess) {
+                guessString += val
+            }
+
+            if (guessString.length != 9) {
+                toastr.error("No hay suficientes letras.")
+                return
+            }
+
+            if (!WORDS.includes(guessString)) {
+                toastr.error("La palabra no está en el diccionario.")
+                return
+            }
+
+            for (let i = 0; i < 9; i++) {
+                let letterColor = ''
+                let box = row.children[i]
+                let letter = currentGuess[i].toLowerCase()
+                let letterPosition = rightGuess.indexOf(currentGuess[i])
+
+                if (letterPosition === -1) {
+                    // Gray
+                    letterColor = '#7b7b7b'
+                } else {
+                    if (currentGuess[i] === rightGuess[i]) {
+                        // Green
+                        letterColor = '#6aaa64'
+                    } else {
+                        // Yellow
+                        letterColor = '#c9b458'
+                    }
+                    rightGuess[letterPosition] = "#"
+                }
+
+                let delay = 250 * i
+                setTimeout(() => {
+                    animateCSS(box, 'flipInX')
+                    box.style.backgroundColor = letterColor
+                    shadeKeyBoard(letter, letterColor)
+                    box.style.color = "white"
+                    box.style.border = "none"
+                }, delay)
+            }
+
+            if (guessString === rightGuessString) {
+                setTimeout(() => { toastr.success("Feliz cumpleaños!") }, 2200)
+                guessesRemaining = 0
+                setTimeout(() => {
+                    document.getElementById("win-button").style.display = "block"
+                    setTimeout(() => { document.getElementById("win-button").style.opacity = "100" }, 100)
+                }, 4500)
+                return
+            } else {
+                guessesRemaining -= 1;
+                currentGuess = [];
+                nextLetter = 0;
+
+                if (guessesRemaining === 0) {
+                    setTimeout(() => {
+                        toastr.error("Te has quedado sin intentos...")
+                        setTimeout(() => {
+                            toastr.info("Vas a tener que intentarlo el próximo dia.")
+                        }, 2000)
+                        setTimeout(() => {
+                            document.getElementById("sleep-button").style.display = "block"
+                            setTimeout(() => { document.getElementById("sleep-button").style.opacity = "100" }, 100)
+                        }, 5000)
+                    }, 2200)
+                }
+            }
+        }
+
+        function insertLetter(pressedKey) {
+            if (nextLetter === 9) {
+                return
+            }
+            pressedKey = pressedKey.toLowerCase()
+            let row = document.getElementsByClassName("letter-row")[6 - guessesRemaining]
+            let box = row.children[nextLetter]
+            animateCSS(box, "pulse")
+            box.textContent = pressedKey
+            box.classList.add("filled-box")
+            currentGuess.push(pressedKey)
+            nextLetter += 1
+        }
+
+        const animateCSS = (element, animation, prefix = 'animate__') =>
+            new Promise((resolve, reject) => {
+                const animationName = `${prefix}${animation}`;
+                const node = element
+                node.style.setProperty('--animate-duration', '0.3s');
+                node.classList.add(`${prefix}animated`, animationName);
+
+                function handleAnimationEnd(event) {
+                    event.stopPropagation();
+                    node.classList.remove(`${prefix}animated`, animationName);
+                    resolve('Animation ended');
+                }
+
+                node.addEventListener('animationend', handleAnimationEnd, { once: true });
+            });
+
+        document.addEventListener("keyup", (e) => {
+            if (started) {
+                if (guessesRemaining === 0) {
+                    return
+                }
+
+                let pressedKey = String(e.key)
+                if (pressedKey === "Backspace" && nextLetter !== 0) {
+                    deleteLetter()
+                    return
+                }
+
+                if (pressedKey === "Enter") {
+                    checkGuess()
+                    return
+                }
+
+                const LETTERS = [
+                    "a",
+                    "b",
+                    "c",
+                    "d",
+                    "e",
+                    "f",
+                    "g",
+                    "h",
+                    "i",
+                    "j",
+                    "k",
+                    "l",
+                    "m",
+                    "n",
+                    "ñ",
+                    "o",
+                    "p",
+                    "q",
+                    "r",
+                    "s",
+                    "t",
+                    "u",
+                    "v",
+                    "w",
+                    "x",
+                    "y",
+                    "z"
+                ]
+                let found = LETTERS.includes(pressedKey.toLowerCase())
+                if (!found || found.length > 1) {
+                    return
+                } else {
+                    insertLetter(pressedKey)
+                }
+            }
+        })
+        document.getElementById("keyboard-cont").addEventListener("click", (e) => {
+            const target = e.target
+
+            if (!target.classList.contains("keyboard-button")) {
+                return
+            }
+
+            let key = target.textContent
+
+            if (key === "Del") {
+                key = "Backspace"
+            }
+
+            document.dispatchEvent(new KeyboardEvent("keyup", { 'key': key }))
+        })
+    </script>
+</body>
+
+</html>
